@@ -42,20 +42,20 @@ def sticker_doc_creation():
             # Set page margins in inches
             sections = doc.sections
             for section in sections:
-                section.top_margin = Cm(0.4)
+                section.top_margin = Cm(0.3)
                 section.bottom_margin = Cm(0)
-                section.left_margin = Cm(0.4)
-                section.right_margin = Cm(0.4)
+                section.left_margin = Cm(0.45)
+                section.right_margin = Cm(0.45)
 
             cell_data = f"""
-            AMRUTA FOODS 
-            Item: {item}
-            MRP: Rs.{mrp}/-
-            Incl. of all taxes
-            Net wt: {weight}
-            Pkd. date: {month}.{year}
-            fssai lic.no. 11216336000104
-            Batch no. {batch_no}"""
+AMRUTA FOODS 
+Item: {item}
+MRP: Rs.{mrp}/-
+Incl. of all taxes
+Net wt: {weight}
+Pkd. date: {month}.{year}
+fssai lic.no. 11216336000104
+Batch no. {batch_no}"""
 
             # Iterate over each row in the table
             for row in table.rows:
@@ -63,7 +63,7 @@ def sticker_doc_creation():
                 for cell in row.cells:
                     # Create a new paragraph in the cell
                     pt = cell.paragraphs[0]
-                    # t = pt.text = ''
+                    pt.paragraph_format.space_after = Pt(5)
                     pt.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
                     # Split the multi-line text into lines
@@ -79,23 +79,17 @@ def sticker_doc_creation():
                         # Set font properties
                         run.font.name = 'Times New Roman'
                         run.font.size = Pt(8.5)
-                        run.space_before = Pt(0)
-                        run.space_after = Pt(0)
 
                         # Set bold font for the header line
                         if 'AMRUTA FOODS' in line:
                             run.bold = True
                             run.underline = True
                             run.font.size = Pt(9.5)
-                            run.space_before = Pt(0)
-                            run.space_after = Pt(0)
 
                         if 'fssai lic.no.' in line:
                             # run.font.name = 'Arial'
                             run.font.size = Pt(8)
                             run.italic = True
-                            run.space_before = Pt(0)
-                            run.space_after = Pt(0)
 
                         if count !=  (len(lines)-1):
                             run = pt.add_run('\n')

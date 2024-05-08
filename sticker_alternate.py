@@ -5,9 +5,12 @@ from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Inches, Cm
+from load_data import load_data
 
 def sticker_doc_creation():
-    """Method to create sticker in docx"""
+    '''Method to create sticker in docx'''
+    items, weights, mrps = load_data()
+    for item in items:
     # Create a new Document
     doc = Document()
 
@@ -60,7 +63,7 @@ def sticker_doc_creation():
         for cell in row.cells:
             # Create a new paragraph in the cell
             pt = cell.paragraphs[0]
-            t = pt.text = ''
+            # t = pt.text = ''
             pt.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
             # Split the multi-line text into lines

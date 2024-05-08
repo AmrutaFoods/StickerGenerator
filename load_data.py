@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-"""data loading from excel"""
+'''data loading from excel'''
 
 from openpyxl import load_workbook
 
 def load_data():
-    """method to load data from excel"""
+    '''method to load data from excel'''
     try:
         # Load the Excel workbook
         workbook = load_workbook('items_list.xlsx')
@@ -38,12 +38,7 @@ def load_data():
             items.append(item)
             weights.append(weight_list)
             mrps.append(mrp_list)
-
-        # Print the loaded data (for demonstration)
-        for item, weight_list, mrp_list in zip(items, weights, mrps):
-            print(f"Item: {item}")
-            print(f"Weights: {weight_list}")
-            print(f"MRPs: {mrp_list}")
+        return items, weights, mrps
     except FileNotFoundError:
         print("Error: The specified Excel file was not found.")
     except ValueError as e:

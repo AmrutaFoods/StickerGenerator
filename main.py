@@ -4,7 +4,8 @@
 from sticker_alternate import sticker_doc_creation
 
 def main():
-    sticker_doc_creation() 
+    """ main method"""
+    sticker_doc_creation()
 
 if __name__ == "__main__":
     main()

@@ -4,6 +4,7 @@
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT, WD_LINE_SPACING
+from docx.enum.table import WD_ALIGN_VERTICAL
 from docx.shared import Inches, Cm
 
 # Create a new Document
@@ -53,23 +54,35 @@ fssai lic.no. {data['fssai_license']}
 Batch no. {data['batch_no']}"""
 
 
+data = """
+AMRUTA FOODS 
+Item: ಜೀರಿಗೆ
+MRP: Rs.75/-
+Incl. of all taxes
+Net wt: 250 gms
+Pkd. date: Feb.2017
+fssai lic.no. 11216336000104
+Batch no. AF-02/17-18
+"""
+
+# for row in table.rows:
+#     for cell in row.cells:
+#         cell.text = multi_line_text.strip()
+
 # Iterate over each row in the table
 for row in table.rows:
     # Iterate over each cell in the row
     for cell in row.cells:
         # Create a new paragraph in the cell
         paragraph = cell.add_paragraph()
-        paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-
-        # Clear all existing formatting from the paragraph
         paragraph.clear()
+        paragraph.paragraph_format.space_before = Pt(0)
+        paragraph.paragraph_format.space_after = Pt(0)
+        paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
+        cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
 
         # Set line spacing to single
         paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
-
-        # Set space before and after paragraph to zero
-        paragraph.paragraph_format.space_before = Pt(0)
-        paragraph.paragraph_format.space_after = Pt(0)
 
         # Split the multi-line text into lines
         lines = multi_line_text.strip().split('\n')

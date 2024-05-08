@@ -37,7 +37,7 @@ def load_data():
             # Append the data to the lists
             items.append(item)
             weights.append(weight_list)
-            mrps.append(mrp_list)
+            mrps.append(mrp_list)    
         return items, weights, mrps
     except FileNotFoundError:
         print("Error: The specified Excel file was not found.")

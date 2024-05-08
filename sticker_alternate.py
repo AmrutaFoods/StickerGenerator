@@ -7,12 +7,13 @@ from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Inches, Cm
 from load_data import load_data
-from utils import get_current_date
+import utils
 
 def sticker_doc_creation():
     '''Method to create sticker in docx'''
     items_english, items, weights, mrps = load_data()
-    month, year = get_current_date()
+    month, year = utils.get_current_date()
+    batch_no = utils.batch_number()
     os.mkdir("Amruta Foods")
     os.chdir("Amruta Foods")
     for item_english, item, weight_list, mrp_list in zip(items_english, items, weights, mrps):
@@ -54,7 +55,7 @@ def sticker_doc_creation():
             Net wt: {weight}
             Pkd. date: {month}.{year}
             fssai lic.no. 11216336000104
-            Batch no. AF-05/23-24"""
+            Batch no. {batch_no}"""
 
             # Iterate over each row in the table
             for row in table.rows:

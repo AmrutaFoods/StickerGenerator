@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''creatiion of sticker in microsoft document'''
 
-import uuid
+import os
 from docx import Document
 from docx.shared import Pt
 from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
@@ -11,13 +11,17 @@ from utils import get_current_date
 
 def sticker_doc_creation():
     '''Method to create sticker in docx'''
-    items, weights, mrps = load_data()
+    items_english, items, weights, mrps = load_data()
     month, year = get_current_date()
-    for item, weight_list, mrp_list in zip(items,weights, mrps):
+    os.mkdir("Amruta Foods")
+    os.chdir("Amruta Foods")
+    for item_english, item, weight_list, mrp_list in zip(items_english, items, weights, mrps):
+        os.mkdir(item_english)
+        os.chdir(item_english)
         for weight, mrp in zip(weight_list, mrp_list):
             # Create a new Document
             doc = Document()
-            doc_name = str(uuid.uuid4()) + ".docx"
+            doc_name = weight + ".docx"
 
             # Add a table
             table = doc.add_table(rows=8, cols=5)
@@ -98,3 +102,4 @@ def sticker_doc_creation():
 
             # Save the document
             doc.save(doc_name)
+        os.chdir("..")

@@ -1,116 +1,104 @@
 #!/usr/bin/env python3
 '''creatiion of sticker in microsoft document'''
 
+import os
 from docx import Document
 from docx.shared import Pt
-from docx.enum.text import WD_PARAGRAPH_ALIGNMENT, WD_LINE_SPACING
-from docx.enum.table import WD_ALIGN_VERTICAL
+from docx.enum.text import WD_PARAGRAPH_ALIGNMENT
 from docx.shared import Inches, Cm
+from load_data import load_data
+import utils
 
-# Create a new Document
-doc = Document()
+def sticker_doc_creation():
+    '''Method to create sticker in docx'''
+    items_english, items, weights, mrps = load_data()
+    month, year = utils.get_current_date()
+    batch_no = utils.batch_number()
+    os.mkdir("Amruta Foods")
+    os.chdir("Amruta Foods")
+    for item_english, item, weight_list, mrp_list in zip(items_english, items, weights, mrps):
+        os.mkdir(item_english)
+        os.chdir(item_english)
+        for weight, mrp in zip(weight_list, mrp_list):
+            # Create a new Document
+            doc = Document()
+            doc_name = weight + ".docx"
 
-# Add a table
-table = doc.add_table(rows=8, cols=5)
+            # Add a table
+            table = doc.add_table(rows=8, cols=5)
 
-# Set table width
-table.autofit = True  # Autofit the table to the page width
+            # Set table width
+            table.autofit = True  # Autofit the table to the page width
 
-# Set minimum row height
-for row in table.rows:
-    row.height = Inches(0.5)  # Adjust the height as needed (e.g., Inches(0.5) for 0.5 inches)
+            # Set minimum row height
+            for row in table.rows:
+                row.height = Inches(0.4)  # Adjust the height as needed
 
-# Set minimum column width
-table.allow_autofit = False  # Disable autofitting to set minimum column width
-for column in table.columns:
-    column.width = Inches(1.6)  # Adjust the width as needed (e.g., Inches(1.5) for 1.5 inches)
+            # Set minimum column width
+            table.allow_autofit = False  # Disable autofitting to set minimum column width
+            for column in table.columns:
+                column.width = Inches(1.6)  # Adjust the width as needed
 
-# Set page margins in inches
-sections = doc.sections
-for section in sections:
-    section.top_margin = Cm(0.4)      # 0.4 centimeters
-    section.bottom_margin = Cm(0)      # 0 centimeters (no margin) at the bottom
-    section.left_margin = Cm(0.4)      # 0.4 centimeters
-    section.right_margin = Cm(0.4)     # 0.4 centimeters
+            # Set page margins in inches
+            sections = doc.sections
+            for section in sections:
+                section.top_margin = Cm(0.3)
+                section.bottom_margin = Cm(0)
+                section.left_margin = Cm(0.45)
+                section.right_margin = Cm(0.45)
 
-data = {
-    'item': 'ಜೀರಿಗೆ',
-    'mrp': 'Rs.75/-',
-    'net_weight': '250 gms',
-    'pkg_date': 'Feb.2017',
-    'fssai_license': '11216336000104',
-    'batch_no': 'AF-02/17-18'
-}
-
-# Sample multi-line text with placeholders for parameterization
-multi_line_text = f"""
+            cell_data = f"""
 AMRUTA FOODS 
-Item: {data['item']}
-MRP: {data['mrp']}
+Item: {item}
+MRP: Rs.{mrp}/-
 Incl. of all taxes
-Net wt: {data['net_weight']}
-Pkd. date: {data['pkg_date']}
-fssai lic.no. {data['fssai_license']}
-Batch no. {data['batch_no']}"""
-
-
-data = """
-AMRUTA FOODS 
-Item: ಜೀರಿಗೆ
-MRP: Rs.75/-
-Incl. of all taxes
-Net wt: 250 gms
-Pkd. date: Feb.2017
+Net wt: {weight}
+Pkd. date: {month}.{year}
 fssai lic.no. 11216336000104
-Batch no. AF-02/17-18
-"""
+Batch no. {batch_no}"""
 
-# for row in table.rows:
-#     for cell in row.cells:
-#         cell.text = multi_line_text.strip()
+            # Iterate over each row in the table
+            for row in table.rows:
+                # Iterate over each cell in the row
+                for cell in row.cells:
+                    # Create a new paragraph in the cell
+                    pt = cell.paragraphs[0]
+                    pt.paragraph_format.space_after = Pt(5)
+                    pt.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
 
-# Iterate over each row in the table
-for row in table.rows:
-    # Iterate over each cell in the row
-    for cell in row.cells:
-        # Create a new paragraph in the cell
-        paragraph = cell.add_paragraph()
-        paragraph.clear()
-        paragraph.paragraph_format.space_before = Pt(0)
-        paragraph.paragraph_format.space_after = Pt(0)
-        paragraph.alignment = WD_PARAGRAPH_ALIGNMENT.CENTER
-        cell.vertical_alignment = WD_ALIGN_VERTICAL.CENTER
+                    # Split the multi-line text into lines
+                    lines = cell_data.strip().split('\n')
+                    count = 0
 
-        # Set line spacing to single
-        paragraph.paragraph_format.line_spacing_rule = WD_LINE_SPACING.SINGLE
+                    # Add each line to the paragraph
+                    for line in lines:
+                        # Create a new run for the line
+                        # run = paragraph.add_run(line)
+                        run = pt.add_run(line)
 
-        # Split the multi-line text into lines
-        lines = multi_line_text.strip().split('\n')
-        count = 0
+                        # Set font properties
+                        run.font.name = 'Times New Roman'
+                        run.font.size = Pt(8.5)
 
-        # Add each line to the paragraph
-        for line in lines:
-            # Create a new run for the line
-            run = paragraph.add_run(line)
+                        # Set bold font for the header line
+                        if 'AMRUTA FOODS' in line:
+                            run.bold = True
+                            run.underline = True
+                            run.font.size = Pt(9.5)
 
-            # Set font properties
-            run.font.name = 'Times New Roman'
-            run.font.size = Pt(9)
+                        if 'fssai lic.no.' in line:
+                            # run.font.name = 'Arial'
+                            run.font.size = Pt(8)
+                            run.italic = True
 
-            # Set bold font for the header line
-            if 'AMRUTA FOODS' in line:
-                run.bold = True
-                run.underline = True
-                run.font.size = Pt(10)
+                        if count !=  (len(lines)-1):
+                            run = pt.add_run('\n')
+                        count += 1
 
-            if 'fssai lic.no.' in line:
-                # run.font.name = 'Arial'
-                run.font.size = Pt(8)
-                run.italic = True
+            # Save the document
+            doc.save(doc_name)
+        os.chdir("..")
 
-            if count !=  (len(lines)-1):
-                run = paragraph.add_run('\n')
-            count += 1
 
-# Save the document
-doc.save('sample.docx')
+# todo: creation of folder when it alread exists
+# todo: adding measurement for weights (gms, kgs)

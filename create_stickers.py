@@ -24,6 +24,11 @@ def sticker_doc_creation():
             doc = Document()
             doc_name = weight + ".docx"
 
+            if weight == '1':
+                weight = weight + " kg"
+            else:
+                weight = weight + " gms"
+
             # Add a table
             table = doc.add_table(rows=8, cols=5)
 
@@ -98,7 +103,3 @@ Batch no. {batch_no}"""
             # Save the document
             doc.save(doc_name)
         os.chdir("..")
-
-
-# todo: creation of folder when it alread exists
-# todo: adding measurement for weights (gms, kgs)

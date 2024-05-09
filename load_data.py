@@ -29,9 +29,9 @@ def load_data():
             if not weight_str or not mrp_str:
                 raise ValueError(f"Weight or MRP string is empty for item '{item}'.")
 
-            # Split the comma-separated strings into lists
-            weight_list = weight_str.split(',')
-            mrp_list = mrp_str.split(',')
+            # Split the comma-separated strings into lists and remove spaces from each item
+            weight_list = [weight.strip() for weight in weight_str.split(',')]
+            mrp_list = [mrp.strip() for mrp in mrp_str.split(',')]
 
             #     # Check if the number of net weights and MRPs match
             if len(weight_list) != len(mrp_list):

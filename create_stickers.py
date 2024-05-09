@@ -14,8 +14,9 @@ def sticker_doc_creation():
     items_english, items, weights, mrps = load_data()
     month, year = utils.get_current_date()
     batch_no = utils.batch_number()
-    os.mkdir("Amruta Foods")
-    os.chdir("Amruta Foods")
+    directory = 'Amruta Foods'
+    utils.folder_creation(directory)
+    os.chdir(directory)
     for item_english, item, weight_list, mrp_list in zip(items_english, items, weights, mrps):
         os.mkdir(item_english)
         os.chdir(item_english)

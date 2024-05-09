@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 '''utility functions'''
 
+import os
+import shutil
 from datetime import datetime
 
 def get_current_date():
@@ -25,3 +27,32 @@ def batch_number():
     # Format the batch number
     batch_no = f"AF-{current_month:02d}/{current_year % 100:02d}-{next_year % 100:02d}"
     return batch_no
+
+def folder_creation(directory):
+    ''' method to check if there is already a directory
+    if not create new and also clean up the old files inside directory'''
+
+    # Check if the directory exists
+    if os.path.exists(directory):
+        print(f"The directory '{directory}' already exists.")
+
+        # Check if the directory is not empty
+        if os.listdir(directory):
+            print(f"The directory '{directory}' is not empty. Removing its contents.")
+
+            # Remove all files and subdirectories within the directory
+            for item in os.listdir(directory):
+                item_path = os.path.join(directory, item)
+                if os.path.isfile(item_path):
+                    os.remove(item_path)
+                elif os.path.isdir(item_path):
+                    shutil.rmtree(item_path)  # Use shutil.rmtree() to remove subdirectories recursively
+
+            print("Contents removed successfully.")
+        else:
+            print(f"The directory '{directory}' is empty.")
+    else:
+        print(f"The directory '{directory}' does not exist. Creating it.")
+        os.makedirs(directory)
+
+    print("Process completed.")
